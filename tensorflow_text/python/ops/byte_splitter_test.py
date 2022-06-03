@@ -235,6 +235,16 @@ class ByteSplitterTest(test_util.TensorFlowTestCase):
     # Assert the results are identical.
     self.assertAllEqual(tflite_result, tf_result)
 
+    input_data = np.array(['Some minds are better kept apart oh'])
+    tf_result = model(tf.constant(input_data))['result']
+
+    output = split(input=input_data)
+    if tf.executing_eagerly():
+      tflite_result = output['result']
+    else:
+      tflite_result = output['output_1']
+    self.assertAllEqual(tflite_result, tf_result)
+
 
 if __name__ == '__main__':
   test.main()
